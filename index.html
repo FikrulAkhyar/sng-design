@@ -1,0 +1,776 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#003a6c">
+<title>Sinergi — Core Banking untuk BPR Indonesia</title>
+<meta name="description" content="PT Sinergi Prakarsa Utama — penyedia core banking system ARB+ dan ekosistem aplikasi untuk BPR di seluruh Indonesia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* Hallmark · macrostructure: Marquee Hero + pinned scroll chapters · tone: technical, bold · anchor hue: Sinergi navy 252
+ * theme: Sinergi brand blue (custom, sampled from logo + map: navy #003a6c, blue #0064ac) · display: Space Grotesk · body: Instrument Sans
+ * scroll DNA studied from lusion.co: smooth scroll, masked line reveals, word scrub, expanding rounded panel,
+ * pinned horizontal gallery, velocity marquee, footer curtain reveal
+ * pre-emit critique: P4 H5 E4 S4 R4 V4
+ */
+:root{
+  --color-paper: oklch(96.5% 0.008 250);
+  --color-paper-2: oklch(92% 0.016 250);
+  --color-ink: oklch(22% 0.06 252);
+  --color-ink-2: oklch(30% 0.08 252);
+  --color-navy: oklch(34.6% 0.102 252);
+  --color-navy-2: oklch(44% 0.11 252);
+  --color-muted: oklch(46% 0.03 252);
+  --color-muted-on-ink: oklch(80% 0.03 250);
+  --color-accent: oklch(49.5% 0.138 250);
+  --color-accent-soft: oklch(76% 0.12 240);
+  --color-signal: oklch(92% 0.19 105);
+  --color-white: oklch(100% 0 0);
+  --color-on-accent: oklch(98% 0.01 250);
+  --color-line: oklch(22% 0.06 252 / .14);
+  --color-line-on-ink: oklch(98% 0.01 250 / .18);
+
+  --font-display: "Space Grotesk", system-ui, sans-serif;
+  --font-body: "Instrument Sans", system-ui, sans-serif;
+
+  --space-xs: .5rem; --space-sm: 1rem; --space-md: 1.5rem; --space-lg: 2.5rem; --space-xl: 4rem; --space-2xl: 7rem; --space-3xl: 11rem;
+  --gutter: clamp(1.25rem, 3.4vw, 3rem);
+  --radius-lg: clamp(1.5rem, 3vw, 3rem);
+  --radius-pill: 999px;
+
+  --text-sm: .875rem; --text-base: 1.0625rem; --text-lg: clamp(1.125rem, 1.4vw, 1.375rem);
+  --text-2xl: clamp(2rem, 4vw, 3.5rem);
+  --text-statement: clamp(1.75rem, 4.2vw, 4rem);
+  --text-display: clamp(3.4rem, 12.5vw, 13rem);
+  --text-hero: clamp(2.7rem, 8.2vw, 9.5rem);
+
+  --ease-out: cubic-bezier(.16, 1, .3, 1);
+  --ease-in-out: cubic-bezier(.65, 0, .35, 1);
+  --dur-fast: .2s; --dur-base: .5s; --dur-slow: 1s;
+  --footer-h: 100vh;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{overflow-x:clip;-webkit-text-size-adjust:100%}
+html.lenis,html.lenis body{height:auto}
+.lenis.lenis-smooth{scroll-behavior:auto!important}
+.lenis.lenis-stopped{overflow:hidden}
+body{overflow-x:clip;background:var(--color-ink);color:var(--color-ink);font-family:var(--font-body);font-size:var(--text-base);line-height:1.55;-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+ul{list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;line-height:.98;letter-spacing:-.035em;font-style:normal;overflow-wrap:anywhere;min-width:0}
+:focus-visible{outline:3px solid var(--color-accent-soft);outline-offset:3px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+
+/* ---------- hidden-until-animated (only when JS+GSAP ready) ---------- */
+.line{display:block;overflow:hidden;padding-bottom:.08em;margin-bottom:-.08em}
+.line>span{display:block}
+html.anim [data-fade]{opacity:0;transform:translateY(32px)}
+
+/* ---------- loader ---------- */
+.loader{position:fixed;inset:0;z-index:100;background:var(--color-navy);color:var(--color-paper);display:grid;place-items:end start;padding:var(--gutter)}
+.loader__count{font-family:var(--font-display);font-weight:600;font-size:var(--text-display);line-height:.8;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.loader__logo{position:absolute;top:var(--gutter);left:var(--gutter);height:3rem;width:auto}
+html:not(.anim) .loader{display:none}
+
+/* ---------- nav ---------- */
+.nav{position:fixed;inset:0 0 auto 0;z-index:50;display:flex;justify-content:space-between;align-items:center;padding:var(--space-md) var(--gutter);color:var(--nav-fg,var(--color-on-accent));transition:color var(--dur-base) var(--ease-out);pointer-events:none}
+.nav.is-light{--nav-fg:var(--color-ink)}
+.menu-open .nav,.menu-open .nav.is-light{--nav-fg:var(--color-on-accent)}
+.nav>*{pointer-events:auto}
+.logo{display:block;line-height:0}
+.logo img{display:block;height:2.4rem;width:auto}
+.nav:not(.is-light) .logo__c,.nav.is-light .logo__w{display:none}
+.menu-open .nav .logo__w{display:block!important}.menu-open .nav .logo__c{display:none!important}
+.nav.is-light .pill:hover{background:var(--color-ink);color:var(--color-paper)}
+.menu-open .nav .pill:hover{background:var(--color-paper);color:var(--color-ink)}
+.nav__right{display:flex;align-items:center;gap:var(--space-sm)}
+.pill{display:inline-flex;align-items:center;gap:.6rem;min-height:2.75rem;padding:0 1.25rem;border-radius:var(--radius-pill);border:1px solid currentColor;font-weight:500;font-size:var(--text-sm);white-space:nowrap;transition:background var(--dur-fast) var(--ease-out),color var(--dur-fast) var(--ease-out)}
+.pill:hover{background:var(--color-paper);color:var(--color-ink)}
+.pill:active{transform:translateY(1px)}
+.pill--solid{background:var(--color-accent);border-color:var(--color-accent);color:var(--color-on-accent)}
+.pill--light{background:var(--color-paper);border-color:var(--color-paper);color:var(--color-navy)}
+.pill--light:hover{background:var(--color-accent-soft);border-color:var(--color-accent-soft);color:var(--color-ink)}
+.pill--solid:hover{background:var(--color-ink);border-color:var(--color-ink);color:var(--color-on-accent)}
+.nav .pill--talk{display:none}
+@media(min-width:640px){.nav .pill--talk{display:inline-flex}}
+
+/* ---------- menu overlay ---------- */
+.menu{position:fixed;inset:0;z-index:40;background:var(--color-navy);color:var(--color-paper);display:flex;flex-direction:column;justify-content:flex-end;padding:7rem var(--gutter) var(--gutter);clip-path:inset(0 0 100% 0);visibility:hidden;transition:clip-path .8s var(--ease-in-out),visibility 0s .8s}
+.menu.is-open{clip-path:inset(0);visibility:visible;transition:clip-path .8s var(--ease-in-out)}
+.menu li{overflow:hidden}
+.menu a{display:inline-block;font-family:var(--font-display);font-weight:600;font-size:clamp(2.5rem,9vw,7.5rem);letter-spacing:-.045em;line-height:1.05;transform:translateY(105%);transition:transform .8s var(--ease-out),color var(--dur-fast)}
+.menu.is-open a{transform:none}
+.menu.is-open li:nth-child(2) a{transition-delay:.05s,0s}.menu.is-open li:nth-child(3) a{transition-delay:.1s,0s}.menu.is-open li:nth-child(4) a{transition-delay:.15s,0s}.menu.is-open li:nth-child(5) a{transition-delay:.2s,0s}.menu.is-open li:nth-child(6) a{transition-delay:.25s,0s}
+.menu a:hover{color:var(--color-accent-soft)}
+.menu__meta{margin-top:var(--space-lg);padding-top:var(--space-md);border-top:1px solid var(--color-line-on-ink);display:flex;flex-wrap:wrap;gap:var(--space-sm) var(--space-lg);color:var(--color-muted-on-ink);font-size:var(--text-sm)}
+
+/* ---------- main wrapper (curtain over footer) ---------- */
+main{position:relative;z-index:1;background:var(--color-paper);border-radius:0 0 var(--radius-lg) var(--radius-lg)}
+section{position:relative}
+
+/* ---------- hero ---------- */
+.hero{height:100svh;min-height:640px;display:flex;flex-direction:column;justify-content:flex-end;padding:6.5rem var(--gutter) var(--gutter);overflow:hidden;color:var(--color-on-accent);background:radial-gradient(120% 90% at 85% 100%,var(--color-navy-2) 0%,var(--color-navy) 58%);border-radius:0 0 var(--radius-lg) var(--radius-lg)}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hero__title{position:relative;font-size:var(--text-hero);color:var(--color-on-accent);max-width:14ch}
+.hero__title .accent{color:var(--color-accent-soft)}
+.hero__foot{position:relative;display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:var(--space-md);margin-top:var(--space-lg)}
+.hero__lead{display:flex;flex-wrap:wrap;align-items:center;gap:var(--space-md) var(--space-lg)}
+.hero__sub{max-width:40ch;font-size:var(--text-lg);color:var(--color-on-accent);opacity:.85}
+.scrollcue{display:flex;align-items:center;gap:.75rem;font-size:var(--text-sm);color:var(--color-muted-on-ink)}
+.scrollcue i{display:block;width:1px;height:3rem;background:var(--color-line-on-ink);position:relative;overflow:hidden}
+.scrollcue i::after{content:"";position:absolute;inset:0;background:var(--color-accent-soft);animation:drip 1.8s var(--ease-in-out) infinite}
+@keyframes drip{0%{transform:translateY(-100%)}60%,100%{transform:translateY(100%)}}
+
+/* ---------- statement (word scrub) ---------- */
+.statement{padding:var(--space-3xl) var(--gutter)}
+.statement p{font-family:var(--font-display);font-weight:500;font-size:var(--text-statement);line-height:1.1;letter-spacing:-.03em;max-width:22ch}
+.statement .w{display:inline-block;opacity:.14;margin-right:.26em}
+html:not(.anim) .statement .w{opacity:1}
+.statement__tag{margin-top:var(--space-xl);display:flex;gap:var(--space-sm);flex-wrap:wrap}
+
+/* ---------- expanding dark panel ---------- */
+.expand{background:var(--color-paper);padding:0}
+.expand__panel{background:var(--color-navy);color:var(--color-paper);min-height:100svh;padding:var(--space-2xl) var(--gutter);display:flex;flex-direction:column;justify-content:space-between;gap:var(--space-xl);clip-path:inset(0 var(--gutter) round var(--radius-lg))}
+html.anim .expand__panel{clip-path:inset(12% 8% round var(--radius-lg))}
+.expand h2{font-size:var(--text-2xl);max-width:16ch}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,14rem),1fr));gap:var(--space-lg);border-top:1px solid var(--color-line-on-ink);padding-top:var(--space-lg)}
+.stat b{display:block;font-family:var(--font-display);font-weight:600;font-size:clamp(3.5rem,8vw,8rem);line-height:.9;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.stat b sup{font-size:.4em;color:var(--color-accent-soft);vertical-align:top;margin-left:.1em}
+.stat>span{display:block;margin-top:var(--space-sm);color:var(--color-muted-on-ink);max-width:22ch}
+
+/* ---------- products (pinned horizontal) ---------- */
+.products{background:var(--color-paper);padding:var(--space-3xl) 0 0}
+.products__head{padding:0 var(--gutter) var(--space-xl);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:var(--space-md)}
+.products__head h2{font-size:var(--text-2xl);max-width:14ch}
+.products__head p{max-width:34ch;color:var(--color-muted)}
+.hpin{height:100svh;display:flex;align-items:center;overflow:hidden;position:relative}
+.htrack{display:flex;gap:var(--space-md);padding:0 var(--gutter);will-change:transform}
+.card{flex:0 0 min(82vw,30rem);height:min(74svh,37rem);border-radius:var(--radius-lg);padding:var(--space-md);display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;background:var(--color-paper-2);transition:transform var(--dur-base) var(--ease-out)}
+.card:hover{transform:translateY(-8px)}
+.card--ink{background:var(--color-ink);color:var(--color-paper)}
+.card--accent{background:var(--color-accent);color:var(--color-on-accent)}
+.card__no{font-family:var(--font-display);font-weight:600;font-size:clamp(6rem,14vw,11rem);line-height:.8;letter-spacing:-.07em;opacity:.12;position:absolute;right:var(--space-md);top:var(--space-md)}
+.card__media{position:relative;flex:none;background:var(--color-white);border-radius:1.25rem;height:clamp(6.5rem,19svh,10rem);margin:.9rem 0;overflow:hidden}
+.card__media img{position:absolute;inset:1rem 1.25rem;width:calc(100% - 2.5rem);height:calc(100% - 2rem);object-fit:contain;display:block}
+.card__tag{display:inline-block;align-self:flex-start;padding:.3rem .9rem;border:1px solid currentColor;border-radius:var(--radius-pill);font-size:var(--text-sm);opacity:.8}
+.card h3{font-size:clamp(1.7rem,2.6vw,2.4rem);margin-bottom:var(--space-xs)}
+.card p{opacity:.8;max-width:34ch}
+.card--cta{align-items:flex-start;justify-content:flex-end;background:transparent;border:1px dashed var(--color-line)}
+.hprogress{position:absolute;left:var(--gutter);right:var(--gutter);bottom:var(--space-lg);height:2px;background:var(--color-line)}
+.hprogress i{display:block;height:100%;background:var(--color-accent);transform-origin:left;transform:scaleX(0)}
+
+/* ---------- about (sticky split) ---------- */
+.about{background:var(--color-paper);padding:var(--space-3xl) var(--gutter);display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-xl)}
+.about__left h2{font-size:var(--text-2xl);max-width:12ch}
+.about__left p{margin-top:var(--space-md);max-width:36ch;color:var(--color-muted)}
+.about__items li{padding:var(--space-lg) 0;border-top:1px solid var(--color-line)}
+.about__items li:last-child{border-bottom:1px solid var(--color-line)}
+.about__items h3{font-size:clamp(1.6rem,2.6vw,2.4rem);margin-bottom:var(--space-xs)}
+.about__items p{color:var(--color-muted);max-width:44ch}
+@media(min-width:900px){
+  .about{grid-template-columns:minmax(0,5fr) minmax(0,6fr);gap:var(--space-2xl)}
+  .about__left{position:sticky;top:20vh;align-self:start}
+  .about__items li{padding:var(--space-2xl) 0 var(--space-xl)}
+}
+
+/* ---------- coverage marquee ---------- */
+.coverage{background:var(--color-paper);padding:var(--space-xl) 0 var(--space-3xl);overflow:hidden}
+.mrow{margin-bottom:.1em}
+.coverage__head{padding:0 var(--gutter) var(--space-xl)}
+.coverage__head h2{font-size:var(--text-2xl);max-width:18ch}
+.mrow{display:flex;white-space:nowrap;will-change:transform}
+.mrow span{font-family:var(--font-display);font-weight:600;font-size:clamp(3.5rem,10vw,10rem);letter-spacing:-.05em;line-height:1.1;padding-right:.4em;flex:none}
+.mrow span::after{content:"";display:inline-block;width:.14em;height:.14em;border-radius:50%;background:var(--color-accent);margin-left:.4em;vertical-align:middle}
+.mrow--outline span{color:transparent;-webkit-text-stroke:1.5px var(--color-ink)}
+
+.map{padding:var(--space-2xl) var(--gutter) 0}
+.map__stage{position:relative;max-width:88rem;margin:0 auto}
+.map__stage.is-done{clip-path:none!important}
+html.anim .map__stage{clip-path:inset(0 100% 0 0)}
+.map__stage img{display:block;width:100%;height:auto}
+.map__dots{position:absolute;inset:0}
+.dot{position:absolute;width:1rem;height:1rem;margin:-.5rem 0 0 -.5rem;padding:0;border-radius:50%;background:var(--color-signal);border:2px solid var(--color-ink);cursor:pointer;transition:background var(--dur-fast) var(--ease-out),box-shadow var(--dur-fast) var(--ease-out)}
+.dot::before{content:"";position:absolute;inset:-.7rem;border-radius:50%}
+.dot::after{content:"";position:absolute;inset:-2px;border-radius:50%;border:2px solid var(--color-signal);animation:ping 2.4s var(--ease-out) infinite;animation-delay:var(--d,0s);pointer-events:none}
+.dot:hover,.dot.is-active{background:var(--color-paper);box-shadow:0 0 0 4px var(--color-signal)}
+.dot.is-active{z-index:3}
+.maptip{position:absolute;z-index:5;pointer-events:none;min-width:8.5rem;padding:.65rem 1rem;border-radius:.9rem;background:var(--color-paper);color:var(--color-ink);box-shadow:0 20px 40px -18px var(--color-ink);opacity:0;visibility:hidden;transform:translate(calc(-50% + var(--shift,0px)),calc(-100% - 1.1rem + 8px));transition:opacity var(--dur-fast) var(--ease-out),transform var(--dur-base) var(--ease-out),visibility 0s var(--dur-fast)}
+.maptip.is-on{opacity:1;visibility:visible;transform:translate(calc(-50% + var(--shift,0px)),calc(-100% - 1.1rem));transition:opacity var(--dur-fast) var(--ease-out),transform var(--dur-base) var(--ease-out),visibility 0s}
+.maptip.is-below{transform:translate(calc(-50% + var(--shift,0px)),calc(1.1rem - 8px))}
+.maptip.is-below.is-on{transform:translate(calc(-50% + var(--shift,0px)),1.1rem)}
+.maptip::after{content:"";position:absolute;left:calc(50% - var(--shift,0px));bottom:-.4rem;width:.8rem;height:.8rem;background:inherit;transform:translateX(-50%) rotate(45deg);border-radius:.15rem}
+.maptip.is-below::after{bottom:auto;top:-.4rem}
+.maptip b{display:block;font-family:var(--font-display);font-weight:600;font-size:1.05rem;letter-spacing:-.02em;line-height:1.2;white-space:nowrap}
+.maptip span{display:block;font-size:var(--text-sm);color:var(--color-muted);white-space:nowrap}
+@keyframes ping{0%{transform:scale(1);opacity:.9}100%{transform:scale(3.2);opacity:0}}
+html.anim .dot{opacity:0;transform:scale(0)}
+.wall{padding:var(--space-3xl) var(--gutter) 0}
+.wall__title{font-size:var(--text-2xl);max-width:20ch;margin-bottom:var(--space-lg)}
+.wall__title--mt{margin-top:var(--space-2xl)}
+.lrow-wrap{margin:0 calc(var(--gutter) * -1) var(--space-sm);overflow:hidden;-webkit-mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent);mask-image:linear-gradient(90deg,transparent,#000 8%,#000 92%,transparent)}
+.lrow{display:flex;width:max-content;will-change:transform}
+.logo-tile{flex:none;width:12rem;margin-right:var(--space-sm);background:var(--color-white);border-radius:1.25rem;height:7.5rem;display:grid;place-items:center;padding:1rem 1.25rem;transition:transform var(--dur-base) var(--ease-out),box-shadow var(--dur-base) var(--ease-out)}
+.logo-tile:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 18px 40px -22px var(--color-ink)}
+.logo-tile img{max-width:100%;max-height:100%;object-fit:contain}
+
+/* ---------- news ---------- */
+.news{background:var(--color-ink);color:var(--color-paper);padding:var(--space-3xl) var(--gutter);border-radius:var(--radius-lg)}
+.news__head{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:var(--space-md);margin-bottom:var(--space-xl)}
+.news__head h2{font-size:var(--text-2xl);max-width:12ch}
+.nrow{display:grid;grid-template-columns:minmax(0,1fr);gap:var(--space-xs);padding:var(--space-lg) 0;border-top:1px solid var(--color-line-on-ink);position:relative;transition:padding var(--dur-base) var(--ease-out),color var(--dur-fast)}
+.nrow:last-of-type{border-bottom:1px solid var(--color-line-on-ink)}
+.nrow time,.nrow em{font-style:normal;color:var(--color-muted-on-ink);font-size:var(--text-sm)}
+.nrow h3{font-size:clamp(1.4rem,2.6vw,2.4rem);letter-spacing:-.03em;line-height:1.1;transition:transform var(--dur-base) var(--ease-out)}
+.nrow:hover h3{transform:translateX(1rem);color:var(--color-accent-soft)}
+@media(min-width:800px){.nrow{grid-template-columns:10rem minmax(0,1fr) 8rem;align-items:center;gap:var(--space-md)}.nrow em{text-align:right}}
+
+.nrow__thumb{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover;border-radius:1rem;margin-top:var(--space-sm)}
+@media(hover:hover) and (min-width:800px){.nrow__thumb{display:none}}
+.npreview{position:fixed;left:0;top:0;z-index:60;width:min(22rem,40vw);aspect-ratio:4/3;border-radius:1.25rem;overflow:hidden;pointer-events:none;opacity:0;background:var(--color-ink-2);transition:opacity var(--dur-fast) var(--ease-out)}
+.npreview.is-on{opacity:1}
+.npreview img{width:100%;height:100%;object-fit:cover;display:block;transform:scale(1.15);transition:transform .7s var(--ease-out)}
+.npreview.is-on img{transform:scale(1)}
+.news__sub{font-size:var(--text-2xl);max-width:16ch;margin:var(--space-3xl) 0 var(--space-lg)}
+.imp{flex:none;display:block;position:relative;width:min(78vw,19rem);margin-right:var(--space-sm);white-space:normal}
+.imp img{display:block;width:100%;height:auto;aspect-ratio:5/4;object-fit:cover;border-radius:1.25rem;transition:transform var(--dur-base) var(--ease-out)}
+.imp:hover img{transform:scale(1.03)}
+.imp__tag{position:absolute;top:.75rem;left:.75rem;padding:.25rem .8rem;border-radius:var(--radius-pill);background:var(--color-paper);color:var(--color-ink);font-size:var(--text-sm);font-weight:500}
+.imp__cap{display:block;margin-top:.8rem;font-family:var(--font-display);font-weight:600;font-size:1.1rem;letter-spacing:-.02em;line-height:1.2}
+.news .lrow-wrap{margin-bottom:0}
+
+/* ---------- cta ---------- */
+.cta{background:var(--color-paper);padding:var(--space-3xl) var(--gutter) var(--space-2xl);min-height:90svh;display:flex;flex-direction:column;justify-content:space-between;gap:var(--space-xl)}
+.cta h2{font-size:clamp(3rem,11vw,11rem);max-width:12ch}
+.cta h2 .accent{color:var(--color-accent)}
+.cta__row{display:flex;flex-wrap:wrap;gap:var(--space-md);align-items:center;justify-content:space-between}
+.cta__row p{max-width:34ch;color:var(--color-muted)}
+.bigbtn{display:inline-flex;align-items:center;justify-content:center;gap:.75rem;min-height:5.5rem;padding:0 2.5rem;border-radius:var(--radius-pill);background:var(--color-accent);color:var(--color-on-accent);font-family:var(--font-display);font-weight:600;font-size:1.5rem;letter-spacing:-.02em;white-space:nowrap;transition:background var(--dur-fast) var(--ease-out)}
+.bigbtn:hover{background:var(--color-ink)}
+.bigbtn:active{transform:translateY(1px)}
+.bigbtn svg{width:1.4rem;height:1.4rem;transition:transform var(--dur-base) var(--ease-out)}
+.bigbtn:hover svg{transform:translateX(.4rem)}
+
+/* ---------- footer (curtain reveal) ---------- */
+.footer{background:var(--color-navy);color:var(--color-paper);padding:calc(var(--space-2xl) + 1rem) var(--gutter) var(--gutter);display:flex;flex-direction:column;justify-content:space-between;gap:var(--space-xl);min-height:var(--footer-h)}
+.footer__logo{display:block;height:3.5rem;width:auto;align-self:flex-start}
+.footer__grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,15rem),1fr));gap:var(--space-lg)}
+.footer h4{font-family:var(--font-body);font-size:var(--text-sm);font-weight:500;color:var(--color-muted-on-ink);margin-bottom:var(--space-sm)}
+.footer address{font-style:normal;color:var(--color-paper)}
+.footer li+li{margin-top:.35rem}
+.footer a:hover{color:var(--color-accent-soft)}
+.footer__word{font-family:var(--font-display);font-weight:700;font-size:clamp(5rem,26vw,28rem);line-height:.8;letter-spacing:-.07em;color:var(--color-navy-2);user-select:none}
+.footer__bar{display:flex;flex-wrap:wrap;justify-content:space-between;gap:var(--space-sm);color:var(--color-muted-on-ink);font-size:var(--text-sm);border-top:1px solid var(--color-line-on-ink);padding-top:var(--space-md)}
+@media(min-width:900px) and (min-height:700px){
+  .footer{position:fixed;inset:auto 0 0 0;z-index:0;height:var(--footer-h)}
+  main{margin-bottom:var(--footer-h)}
+}
+
+/* ---------- cursor ---------- */
+.cursor{position:fixed;left:0;top:0;z-index:90;width:.9rem;height:.9rem;margin:-.45rem 0 0 -.45rem;border-radius:50%;background:var(--color-accent-soft);pointer-events:none;mix-blend-mode:normal;opacity:0;transition:width var(--dur-base) var(--ease-out),height var(--dur-base) var(--ease-out),margin var(--dur-base) var(--ease-out),opacity var(--dur-fast)}
+.cursor.is-on{opacity:1}
+.cursor.is-big{width:4.5rem;height:4.5rem;margin:-2.25rem 0 0 -2.25rem;opacity:.9}
+@media(hover:none),(pointer:coarse){.cursor{display:none}}
+
+@media(prefers-reduced-motion:reduce){
+  .scrollcue i::after{animation:none}
+  *{transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="loader" aria-hidden="true">
+  <img class="loader__logo" src="assets/brand/logo-white.png" alt="PT Sinergi Prakarsa Utama" width="432" height="168">
+  <span class="loader__count" id="loaderCount">0</span>
+</div>
+<div class="cursor" id="cursor" aria-hidden="true"></div>
+
+<header class="nav">
+  <a href="#top" class="logo" aria-label="Sinergi — beranda"><img class="logo__w" src="assets/brand/logo-white.png" alt="Sinergi" width="432" height="168"><img class="logo__c" src="assets/brand/logo-color.png" alt="" aria-hidden="true" width="432" height="168"></a>
+  <div class="nav__right">
+    <a href="#kontak" class="pill pill--talk">Hubungi kami</a>
+    <button class="pill" id="menuBtn" aria-expanded="false" aria-controls="menu"><span id="menuLabel">Menu</span></button>
+  </div>
+</header>
+
+<nav class="menu" id="menu" aria-label="Navigasi utama">
+  <ul>
+    <li><a href="#produk">Produk &amp; Layanan</a></li>
+    <li><a href="#tentang">Tentang kami</a></li>
+    <li><a href="#jangkauan">Klien &amp; Jangkauan</a></li>
+    <li><a href="#berita">Berita &amp; Acara</a></li>
+    <li><a href="#kontak">Kontak</a></li>
+  </ul>
+  <div class="menu__meta">
+    <span>cs@sinergic.co.id</span><span>021-80821315 / 021-80821316</span><span>Alam Sutera, Tangerang</span>
+  </div>
+</nav>
+
+<main id="top">
+
+  <!-- HERO -->
+  <section class="hero" data-nav="dark" aria-labelledby="h1">
+    <canvas id="heroCanvas" aria-hidden="true"></canvas>
+    <h1 class="hero__title" id="h1">
+      <span class="line"><span>Leading Core</span></span>
+      <span class="line"><span>Banking System</span></span>
+      <span class="line"><span>in <span class="accent">Indonesia</span></span></span>
+    </h1>
+    <div class="hero__foot">
+      <div class="hero__lead" data-fade>
+        <p class="hero__sub">Melalui perkembangan terus-menerus, kami memprioritaskan kebutuhan Anda, memberikan dukungan yang maksimal.</p>
+        <a href="#produk" class="pill pill--light" data-cursor>Lihat layanan
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+      </div>
+      <div class="scrollcue" data-fade><i></i>Scroll untuk menjelajah</div>
+    </div>
+  </section>
+
+  <!-- STATEMENT -->
+  <section class="statement" data-nav="light" aria-label="Tentang Sinergi">
+    <p id="statementText">Lebih dari 15 tahun, kami membangun sistem perbankan yang paling banyak dipakai BPR di Indonesia, diakui dan direkomendasikan OJK.</p>
+    <div class="statement__tag" data-fade>
+      <a href="#tentang" class="pill pill--solid" data-cursor>Kenali Sinergi</a>
+    </div>
+  </section>
+
+  <!-- EXPANDING PANEL -->
+  <section class="expand" data-nav="dark" aria-labelledby="h-expand">
+    <div class="expand__panel" id="expandPanel">
+      <h2 id="h-expand">Dipercaya BPR dari Sabang hingga Merauke.</h2>
+      <div class="stats">
+        <div class="stat"><b><span data-count="15">15</span><sup>+</sup></b><span>tahun pengalaman membangun sistem perbankan</span></div>
+        <div class="stat"><b><span data-count="7">7</span></b><span>produk dan layanan dalam satu ekosistem</span></div>
+        <div class="stat"><b>OJK</b><span>diakui dan direkomendasikan regulator</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="products" data-nav="light" id="produk" aria-labelledby="h-prod">
+    <div class="products__head">
+      <h2 id="h-prod">Pilihan terbaik untuk perbankan Indonesia.</h2>
+      <p data-fade>Tujuh produk yang saling terhubung, dari inti perbankan hingga aplikasi lapangan.</p>
+    </div>
+    <div class="hpin" id="hpin">
+      <div class="htrack" id="htrack">
+        <article class="card card--accent" data-cursor>
+          <span class="card__tag">Core banking</span>
+          <div class="card__media"><img src="assets/products/logo5.png" alt="Logo ARB+"></div>
+          <div><h3>ARB+</h3><p>Core banking berbasis web untuk BPR. Mudah digunakan, sesuai ketentuan OJK, fitur operasional lengkap, berjalan di cloud berstandar internasional.</p></div>
+        </article>
+        <article class="card card--ink" data-cursor>
+          <span class="card__tag">Pelaporan</span>
+          <div class="card__media"><img src="assets/products/tks.jpg" alt="Logo TKS"></div>
+          <div><h3>TKS Reporting, Risk &amp; Governance</h3><p>Aplikasi web untuk pelaporan dan pemantauan tingkat kesehatan BPR: rasio keuangan, profil risiko, dan tata kelola.</p></div>
+        </article>
+        <article class="card" data-cursor>
+          <span class="card__tag">Keamanan</span>
+          <div class="card__media"><img src="assets/products/e-kyc.png" alt="Logo e-KYC"></div>
+          <div><h3>e-KYC</h3><p>Verifikasi data demografis dan swafoto calon nasabah terhadap data kependudukan lewat penyedia tanda tangan digital VIDA, menekan risiko pemalsuan identitas.</p></div>
+        </article>
+        <article class="card" data-cursor>
+          <span class="card__tag">Android</span>
+          <div class="card__media"><img src="assets/products/m-approval.png" alt="Logo M-Approval"></div>
+          <div><h3>M-Approval</h3><p>Direksi dan pejabat BPR menyetujui transaksi atau perubahan data dari luar kantor, kapan saja.</p></div>
+        </article>
+        <article class="card card--ink" data-cursor>
+          <span class="card__tag">Pembayaran</span>
+          <div class="card__media"><img src="assets/products/virtual-account.png" alt="Logo Virtual Account"></div>
+          <div><h3>Virtual Account</h3><p>Pembayaran dan setoran real-time ke rekening tabungan atau pinjaman BPR lewat ATM, mobile/internet banking, hingga gerai Alfamart dan Indomaret.</p></div>
+        </article>
+        <article class="card card--accent" data-cursor>
+          <span class="card__tag">Android</span>
+          <div class="card__media"><img src="assets/products/m-collection.png" alt="Logo M-Collection"></div>
+          <div><h3>M-Collection</h3><p>Petugas pemasaran dan penagihan menerima setoran tunai di lapangan, tersinkron real-time dengan core BPR.</p></div>
+        </article>
+        <article class="card" data-cursor>
+          <span class="card__tag">Notifikasi</span>
+          <div class="card__media"><img src="assets/products/sms-notif.png" alt="Logo SMS / WhatsApp Notifikasi"></div>
+          <div><h3>SMS / WhatsApp Notification</h3><p>Pemberitahuan otomatis ke nasabah, terhubung langsung dengan data dan transaksi di core system.</p></div>
+        </article>
+        <a href="#kontak" class="card card--cta" data-cursor>
+          <h3>Ingin demo?<br>Bicara dengan kami →</h3>
+        </a>
+      </div>
+      <div class="hprogress" aria-hidden="true"><i id="hbar"></i></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about" data-nav="light" id="tentang" aria-labelledby="h-about">
+    <div class="about__left">
+      <h2 id="h-about">Kemitraan strategis untuk keberhasilan bersama.</h2>
+      <p>Sinergi adalah salah satu dari tiga vendor aplikasi perbankan BPR konvensional dengan pengguna terbanyak, diakui dan direkomendasikan OJK.</p>
+    </div>
+    <ul class="about__items">
+      <li data-fade><h3>Berkembang bersama klien</h3><p>Pengembangan berkelanjutan yang menempatkan kebutuhan klien lebih dulu.</p></li>
+      <li data-fade><h3>Patuh regulasi</h3><p>ARB+ mengikuti ketentuan OJK dan siap untuk implementasi SAK EP.</p></li>
+      <li data-fade><h3>Aman dan teruji</h3><p>Uji penetrasi berhasil dilakukan untuk memperkuat keamanan sistem.</p></li>
+      <li data-fade><h3>Dukungan maksimal</h3><p>Tim yang mendampingi dari implementasi, pelatihan, hingga operasional harian.</p></li>
+    </ul>
+  </section>
+
+  <!-- COVERAGE -->
+  <section class="coverage" data-nav="light" id="jangkauan" aria-labelledby="h-cov">
+    <div class="coverage__head"><h2 id="h-cov">Layanan kami telah menjangkau hampir seluruh wilayah Indonesia.</h2></div>
+    <div class="mrow" data-marquee="-1" data-skew="1" aria-hidden="true"><span>Klien kami tersebar dari Sabang sampai Merauke</span></div>
+    <div class="mrow mrow--outline" data-marquee="1" data-skew="1" aria-hidden="true"><span>Satu sistem, seluruh Nusantara</span></div>
+
+    <div class="map" id="map">
+      <div class="map__stage" id="mapStage">
+        <img src="assets/Group-24.png" width="1620" height="616" alt="Peta Indonesia dengan titik wilayah layanan Sinergi">
+        <div class="map__dots" id="mapDots" aria-hidden="true"></div>
+      </div>
+    </div>
+
+    <div class="wall">
+      <h3 class="wall__title" data-fade>Klien yang telah bekerja sama dengan kami</h3>
+      <div class="lrow-wrap"><ul class="lrow" data-marquee="-1" data-speed="0.7" data-skew="0.3"><li class="logo-tile"><img src="assets/clients/Picture1.jpg" alt="BPR BDE Yogyakarta"></li><li class="logo-tile"><img src="assets/clients/Picture10.jpg" alt="Karya Perdana Sejahtera"></li><li class="logo-tile"><img src="assets/clients/Picture11.png" alt="Rifi Maligi"></li><li class="logo-tile"><img src="assets/clients/Picture12.png" alt="Bank Sulawesi Mandiri"></li><li class="logo-tile"><img src="assets/clients/Picture14.png" alt="BPR SiP"></li><li class="logo-tile"><img src="assets/clients/Picture15.png" alt="Kepri Bintan"></li><li class="logo-tile"><img src="assets/clients/Picture17.jpg" alt="Danamas"></li><li class="logo-tile"><img src="assets/clients/Picture18.png" alt="BPR Karya Guna Mandiri"></li><li class="logo-tile"><img src="assets/clients/Picture19.png" alt="Bank Mitra"></li><li class="logo-tile"><img src="assets/clients/Picture2.jpg" alt="BPR BDS"></li><li class="logo-tile"><img src="assets/clients/Picture21.png" alt="Marcorindo"></li><li class="logo-tile"><img src="assets/clients/Picture22.png" alt="BPR LPM"></li></ul></div>
+      <div class="lrow-wrap"><ul class="lrow" data-marquee="1" data-speed="0.55" data-skew="0.3"><li class="logo-tile"><img src="assets/clients/Picture23.png" alt="Bank Lokadana"></li><li class="logo-tile"><img src="assets/clients/Picture24.jpg" alt="Tri Gunung Selatan"></li><li class="logo-tile"><img src="assets/clients/Picture28.png" alt="Danatama Indonesia"></li><li class="logo-tile"><img src="assets/clients/Picture29.png" alt="Bank Citra"></li><li class="logo-tile"><img src="assets/clients/Picture3.jpg" alt="Bank Manggala"></li><li class="logo-tile"><img src="assets/clients/Picture30.png" alt="Rudo Indobank"></li><li class="logo-tile"><img src="assets/clients/Picture31.png" alt="BPR klien Sinergi"></li><li class="logo-tile"><img src="assets/clients/Picture32.jpg" alt="BAS Bank"></li><li class="logo-tile"><img src="assets/clients/Picture33.png" alt="Bank Batanghari"></li><li class="logo-tile"><img src="assets/clients/Picture35.png" alt="Harapan Bunda Batam"></li><li class="logo-tile"><img src="assets/clients/Picture36.png" alt="Bank Darsa"></li></ul></div>
+      <div class="lrow-wrap"><ul class="lrow" data-marquee="-1" data-speed="0.85" data-skew="0.3"><li class="logo-tile"><img src="assets/clients/Picture38.png" alt="Dana Nagoya"></li><li class="logo-tile"><img src="assets/clients/Picture39.png" alt="BPR Primadana"></li><li class="logo-tile"><img src="assets/clients/Picture4.png" alt="Hayura Artalola"></li><li class="logo-tile"><img src="assets/clients/Picture40.png" alt="Pancur Banua Khatulistiwa"></li><li class="logo-tile"><img src="assets/clients/Picture41.png" alt="Bank Lebak"></li><li class="logo-tile"><img src="assets/clients/Picture42.png" alt="Bank Artha"></li><li class="logo-tile"><img src="assets/clients/Picture43.png" alt="Dana Utama"></li><li class="logo-tile"><img src="assets/clients/Picture44.png" alt="Bina Dana Swadaya"></li><li class="logo-tile"><img src="assets/clients/Picture6.png" alt="Bank Akasia Mas"></li><li class="logo-tile"><img src="assets/clients/Picture7.png" alt="BPR Sukabumi"></li><li class="logo-tile"><img src="assets/clients/Picture8.png" alt="Pancaputra Ganda Grup"></li></ul></div>
+      <h3 class="wall__title wall__title--mt" data-fade>Mitra kami</h3>
+      <div class="lrow-wrap"><ul class="lrow" data-marquee="1" data-speed="0.6" data-skew="0.3"><li class="logo-tile"><img src="assets/partners/APTANA.png" alt="Aptana"></li><li class="logo-tile"><img src="assets/partners/BCA-removebg-preview.png" alt="BCA"></li><li class="logo-tile"><img src="assets/partners/BNI-removebg-preview.png" alt="BNI"></li><li class="logo-tile"><img src="assets/partners/ESPAY.png" alt="Espay"></li><li class="logo-tile"><img src="assets/partners/FASPAY-removebg-preview.png" alt="Faspay"></li><li class="logo-tile"><img src="assets/partners/PERMATA_BANK-removebg-preview.png" alt="Permata Bank"></li><li class="logo-tile"><img src="assets/partners/VIDA.png" alt="VIDA"></li><li class="logo-tile"><img src="assets/partners/WOWRACK.png" alt="Wowrack"></li></ul></div>
+    </div>
+  </section>
+
+  <!-- NEWS -->
+  <section class="news" data-nav="dark" id="berita" aria-labelledby="h-news">
+    <div class="news__head">
+      <h2 id="h-news">Kabar terbaru dari Sinergi.</h2>
+      <a href="https://sinergic.co.id/" class="pill" data-cursor>Semua berita</a>
+    </div>
+    <a class="nrow" href="https://sinergic.co.id/sinergi-gathering-2026/" data-img="assets/news/gathering-2026.jpg" data-fade><time datetime="2026-09-21">21 Sep 2026</time><h3>Sinergi Gathering 2026</h3><em>Internal</em><img class="nrow__thumb" src="assets/news/gathering-2026.jpg" alt="Foto bersama tim Sinergi pada Sinergi Gathering 2026" loading="lazy" width="768" height="513"></a>
+    <a class="nrow" href="https://sinergic.co.id/celebrating-sinergis-17th-anniversary/" data-img="assets/news/anniversary-17.jpg" data-fade><time datetime="2026-09-19">19 Sep 2026</time><h3>Merayakan HUT ke-17 Sinergi</h3><em>Internal</em><img class="nrow__thumb" src="assets/news/anniversary-17.jpg" alt="Perayaan ulang tahun ke-17 Sinergi" loading="lazy" width="768" height="513"></a>
+    <a class="nrow" href="https://sinergic.co.id/management-meeting/" data-img="assets/news/management-meeting.jpg" data-fade><time datetime="2026-08-29">29 Agu 2026</time><h3>Management Meeting</h3><em>Internal</em><img class="nrow__thumb" src="assets/news/management-meeting.jpg" alt="Foto bersama peserta Management Meeting" loading="lazy" width="768" height="513"></a>
+    <a class="nrow" href="https://sinergic.co.id/pelatihan-pdp-dan-gathering-client-sinergi/" data-img="assets/news/pdp-gathering.jpg" data-fade><time datetime="2024-10-05">5 Okt 2024</time><h3>Pelatihan PDP dan gathering klien Sinergi</h3><em>Acara</em><img class="nrow__thumb" src="assets/news/pdp-gathering.jpg" alt="Pelatihan perlindungan data pribadi bersama klien" loading="lazy" width="768" height="513"></a>
+    <a class="nrow" href="https://sinergic.co.id/pt-sinergi-prakarsa-utama-sukses-melakukan-penetration-test-untuk-meningkatkan-keamanan-sistem/" data-img="assets/news/penetration-test.jpg" data-fade><time datetime="2024-08-23">23 Agu 2024</time><h3>Uji penetrasi sukses, sistem makin aman</h3><em>Umum</em><img class="nrow__thumb" src="assets/news/penetration-test.jpg" alt="Sertifikat keamanan hasil uji penetrasi" loading="lazy" width="768" height="513"></a>
+    <a class="nrow" href="https://sinergic.co.id/cbs-core-siap-untuk-penerapan-sak-ep/" data-img="assets/news/sak-ep.jpg" data-fade><time datetime="2024-02-27">27 Feb 2024</time><h3>CBS ARB+ siap untuk implementasi SAK EP</h3><em>Pers</em><img class="nrow__thumb" src="assets/news/sak-ep.jpg" alt="Poster CBS ARB+ siap untuk penerapan SAK EP" loading="lazy" width="768" height="513"></a>
+    <a class="nrow" href="https://sinergic.co.id/leadership-training-alc/" data-img="assets/news/leadership-training.jpg" data-fade><time datetime="2023-03-11">11 Mar 2023</time><h3>Leadership Training Sinergi</h3><em>Internal</em><img class="nrow__thumb" src="assets/news/leadership-training.jpg" alt="Sesi Leadership Training Sinergi" loading="lazy" width="768" height="513"></a>
+    <h3 class="news__sub" data-fade>Implementasi terbaru di BPR</h3>
+    <div class="lrow-wrap"><div class="lrow" data-marquee="-1" data-speed=".6" data-skew="0.3"><a class="imp" href="https://sinergic.co.id/implementasi-core-banking-system-arb-pt-bpr-adji-caka/" data-cursor><img src="assets/news/imp-adji-caka.jpg" alt="" loading="lazy" width="1000" height="800"><span class="imp__tag">Implementasi</span><span class="imp__cap">Implementasi ARB+ BPR Adji Caka</span></a><a class="imp" href="https://sinergic.co.id/implementasi-core-banking-system-arb-pt-bpr-putra-batam/" data-cursor><img src="assets/news/imp-putra-batam.jpg" alt="" loading="lazy" width="1000" height="800"><span class="imp__tag">Implementasi</span><span class="imp__cap">Implementasi ARB+ BPR Putra Batam</span></a><a class="imp" href="https://sinergic.co.id/implementasi-core-banking-system-arb-pt-bpr-artatama-sejahtera/" data-cursor><img src="assets/news/imp-artatama.jpg" alt="" loading="lazy" width="1000" height="800"><span class="imp__tag">Implementasi</span><span class="imp__cap">Implementasi ARB+ BPR Artatama Sejahtera</span></a><a class="imp" href="https://sinergic.co.id/implementasi-core-banking-system-arb-pt-bpr-semesta-megadana/" data-cursor><img src="assets/news/imp-semesta.jpg" alt="" loading="lazy" width="1000" height="800"><span class="imp__tag">Implementasi</span><span class="imp__cap">Implementasi ARB+ BPR Semesta Megadana</span></a><a class="imp" href="https://sinergic.co.id/implementasi-core-banking-system-arb-pt-bpr-millenia/" data-cursor><img src="assets/news/imp-millenia.jpg" alt="" loading="lazy" width="1000" height="800"><span class="imp__tag">Implementasi</span><span class="imp__cap">Implementasi ARB+ BPR Millenia</span></a><a class="imp" href="https://sinergic.co.id/penggabungan-merger-pt-bpr-pusaka-dana/" data-cursor><img src="assets/news/imp-pusaka-dana.jpg" alt="" loading="lazy" width="1000" height="800"><span class="imp__tag">Merger</span><span class="imp__cap">Penggabungan BPR Pusaka Dana</span></a><a class="imp" href="https://sinergic.co.id/penggabungan-merger-pt-bpr-mangatur-ganda/" data-cursor><img src="assets/news/imp-mangatur-ganda.jpg" alt="" loading="lazy" width="1000" height="800"><span class="imp__tag">Merger</span><span class="imp__cap">Penggabungan BPR Mangatur Ganda</span></a></div></div>
+    <div class="npreview" id="npreview" aria-hidden="true"><img alt=""></div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta" data-nav="light" id="kontak" aria-labelledby="h-cta">
+    <h2 id="h-cta"><span class="line"><span>Siap bicara</span></span><span class="line"><span>soal <span class="accent">core</span> Anda?</span></span></h2>
+    <div class="cta__row">
+      <p data-fade>Ingin dukungan optimal untuk Core Banking System BPR Anda? Tim kami siap membantu.</p>
+      <a href="mailto:cs@sinergic.co.id" class="bigbtn" id="magnet" data-cursor>Hubungi kami
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <img class="footer__logo" src="assets/brand/logo-white.png" alt="PT Sinergi Prakarsa Utama" width="432" height="168">
+  <div class="footer__grid">
+    <div><h4>Kantor pusat</h4><address>Ruko The Prominence Blok 38-H No. 10, Alam Sutera, Jl. Jalur Sutera Boulevard, Pinang, Kota Tangerang, Banten 15143</address></div>
+    <div><h4>Kantor cabang</h4><address>Ruko Klampis 21 Blok AA No. 2, Jl. Arief Rahman Hakim, Surabaya 60117</address></div>
+    <div><h4>Kontak</h4><ul><li><a href="mailto:cs@sinergic.co.id">cs@sinergic.co.id</a></li><li><a href="tel:+622180821315">021-80821315</a></li><li><a href="tel:+622180821316">021-80821316</a></li></ul></div>
+    <div><h4>Jelajahi</h4><ul><li><a href="#produk">Produk &amp; Layanan</a></li><li><a href="#tentang">Tentang kami</a></li><li><a href="#jangkauan">Klien</a></li><li><a href="#berita">Berita &amp; Acara</a></li></ul></div>
+  </div>
+  <div class="footer__word" aria-hidden="true">Sinergi</div>
+  <div class="footer__bar"><span>© 2026 PT Sinergi Prakarsa Utama</span><span>Facebook · Instagram</span></div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
+<script>
+(function(){
+  var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var hasGsap = !!(window.gsap && window.ScrollTrigger);
+  var $ = function(s,c){return (c||document).querySelector(s)};
+  var $$ = function(s,c){return Array.prototype.slice.call((c||document).querySelectorAll(s))};
+
+  /* ---------- menu (works without libs) ---------- */
+  var menu=$('#menu'), btn=$('#menuBtn'), label=$('#menuLabel'), lenis=null;
+  function setMenu(open){
+    menu.classList.toggle('is-open',open);
+    btn.setAttribute('aria-expanded',open);
+    label.textContent=open?'Tutup':'Menu';
+    document.documentElement.style.overflow=open?'hidden':'';
+    document.body.classList.toggle('menu-open',open);
+    if(lenis){open?lenis.stop():lenis.start();}
+  }
+  btn.addEventListener('click',function(){setMenu(!menu.classList.contains('is-open'))});
+  addEventListener('keydown',function(e){if(e.key==='Escape')setMenu(false)});
+  $$('.menu a').forEach(function(a){a.addEventListener('click',function(){setMenu(false)})});
+
+  /* ---------- anchors ---------- */
+  $$('a[href^="#"]').forEach(function(a){
+    a.addEventListener('click',function(e){
+      var id=a.getAttribute('href'); if(id.length<2)return;
+      var t=$(id); if(!t)return; e.preventDefault();
+      if(lenis) lenis.scrollTo(t,{offset:0,duration:1.6}); else t.scrollIntoView({behavior:reduce?'auto':'smooth'});
+    });
+  });
+
+  /* ---------- nav flips light/dark with the section under it ---------- */
+  (function navTheme(){
+    var nav=$('.nav'),secs=$$('main > section[data-nav]'),main=$('main'),tick=false;
+    function update(){
+      tick=false;var y=44,theme='dark';
+      secs.forEach(function(el){var r=el.getBoundingClientRect();if(r.top<=y&&r.bottom>y)theme=el.dataset.nav});
+      if(main.getBoundingClientRect().bottom<=y)theme='dark';
+      nav.classList.toggle('is-light',theme==='light');
+    }
+    function req(){if(!tick){tick=true;requestAnimationFrame(update)}}
+    addEventListener('scroll',req,{passive:true});addEventListener('resize',req);addEventListener('load',update);update();
+  })();
+
+  /* ---------- interactive map: hover / focus / click shows tooltip ---------- */
+  (function initMap(){
+    var stage=$('#mapStage'),dotsEl=$('#mapDots'); if(!stage||!dotsEl)return;
+    // [kota, jumlah klien, left %, top %] — from the original sinergic.co.id map hotspots
+    var spots=[["Medan",2,7.4,13.7],["Tanjung Pinang",2,20.1,26.1],["Pekanbaru",2,13.6,29.9],["Batam",6,18.7,27.9],["Pangkalpinang",1,23.9,47.5],["Palembang",10,20.8,52.1],["Bengkulu",1,17.2,61.7],["Lampung",5,21.3,64.8],["Jabodetabek",16,25.5,71.7],["Bandung",8,27.1,76.3],["Serang",1,23.8,74.8],["Yogyakarta",1,33.5,77.9],["Surabaya",1,38.2,80.6],["Bali",1,44.7,85.5],["Lombok",1,47.5,86.9],["Sumbawa",1,49.3,87.7],["Manggarai",1,56.7,87.1],["Pontianak",4,31.5,36.0],["Pangkalan Bun",4,36.5,50.4],["Balikpapan",1,48.2,39.9],["Bontang",1,49.4,32.6],["Gowa",1,54.5,66.9],["Palu",1,55.2,40.6],["Gorontalo",2,60.5,29.3],["Manado",2,64.3,29.6],["Kendari",1,59.7,57.2],["Wakatobi",1,62.5,65.1],["Ternate",1,72.0,27.1]];
+    var tip=document.createElement('div');tip.className='maptip';tip.setAttribute('role','tooltip');tip.id='mapTip';
+    tip.innerHTML='<b></b><span></span>';stage.appendChild(tip);
+    var pinned=null,current=null;
+    function show(d){
+      current=d;
+      $$('.dot',dotsEl).forEach(function(x){x.classList.toggle('is-active',x===d)});
+      tip.firstChild.textContent=d.dataset.name;tip.lastChild.textContent=d.dataset.count+' klien';
+      var W=stage.clientWidth,H=stage.clientHeight,x=parseFloat(d.dataset.l)/100*W,y=parseFloat(d.dataset.t)/100*H;
+      tip.style.left=x+'px';tip.style.top=y+'px';
+      tip.classList.toggle('is-below',y<90);
+      tip.style.setProperty('--shift','0px');
+      var w=tip.offsetWidth,shift=0; if(x-w/2<8)shift=8-(x-w/2); else if(x+w/2>W-8)shift=(W-8)-(x+w/2);
+      tip.style.setProperty('--shift',shift+'px');
+      tip.classList.add('is-on');d.setAttribute('aria-describedby','mapTip');
+    }
+    function hide(){current=null;tip.classList.remove('is-on');$$('.dot',dotsEl).forEach(function(x){x.classList.remove('is-active');x.removeAttribute('aria-describedby')})}
+    spots.forEach(function(c,i){
+      var d=document.createElement('button');d.type='button';d.className='dot';
+      d.dataset.name=c[0];d.dataset.count=c[1];d.dataset.l=c[2];d.dataset.t=c[3];
+      d.style.left=c[2]+'%';d.style.top=c[3]+'%';d.style.setProperty('--d',(i%7)*.3+'s');
+      d.setAttribute('aria-label',c[0]+', '+c[1]+' klien');
+      d.addEventListener('mouseenter',function(){if(!pinned)show(d)});
+      d.addEventListener('mouseleave',function(){if(!pinned)hide()});
+      d.addEventListener('focus',function(){show(d)});
+      d.addEventListener('blur',function(){if(pinned!==d)hide();});
+      d.addEventListener('click',function(e){
+        e.stopPropagation();
+        if(pinned===d){pinned=null;hide();} else {pinned=d;show(d);}
+      });
+      dotsEl.appendChild(d);
+    });
+    document.addEventListener('click',function(){if(pinned){pinned=null;hide()}});
+    addEventListener('keydown',function(e){if(e.key==='Escape'&&pinned){pinned=null;hide()}});
+    addEventListener('resize',function(){if(current)show(current)});
+  })();
+
+  /* ---------- news: image preview that follows the cursor ---------- */
+  (function initNews(){
+    var pv=$('#npreview'); if(!pv||!matchMedia('(hover:hover) and (min-width:800px)').matches)return;
+    var img=pv.firstElementChild,rows=$$('.nrow[data-img]'),tx=0,ty=0,x=0,y=0,run=false,w=pv.offsetWidth||352,h=pv.offsetHeight||264;
+    rows.forEach(function(r){var i=new Image();i.src=r.dataset.img});
+    function loop(){
+      x+=(tx-x)*(reduce?1:.14);y+=(ty-y)*(reduce?1:.14);
+      pv.style.transform='translate3d('+x+'px,'+y+'px,0)';
+      if(run)requestAnimationFrame(loop);
+    }
+    function place(e){
+      w=pv.offsetWidth;h=pv.offsetHeight;
+      tx=Math.min(e.clientX+32,innerWidth-w-16);ty=Math.max(16,Math.min(e.clientY-h/2,innerHeight-h-16));
+    }
+    rows.forEach(function(r){
+      r.addEventListener('mouseenter',function(e){
+        img.src=r.dataset.img;img.alt='';place(e);
+        if(!run){x=tx;y=ty;run=true;loop()}
+        pv.classList.add('is-on');
+      });
+      r.addEventListener('mousemove',place);
+      r.addEventListener('mouseleave',function(){pv.classList.remove('is-on');run=false});
+    });
+    addEventListener('scroll',function(){if(pv.classList.contains('is-on')){pv.classList.remove('is-on');run=false}},{passive:true});
+  })();
+
+  if(!hasGsap||reduce){
+    document.documentElement.classList.remove('anim');
+    drawHero(false);
+    return;
+  }
+
+  document.documentElement.classList.add('anim');
+  gsap.registerPlugin(ScrollTrigger);
+
+  /* ---------- smooth scroll ---------- */
+  if(window.Lenis){
+    lenis=new Lenis({duration:1.2,easing:function(t){return Math.min(1,1.001-Math.pow(2,-10*t))}});
+    lenis.on('scroll',ScrollTrigger.update);
+    gsap.ticker.add(function(t){lenis.raf(t*1000)});
+    gsap.ticker.lagSmoothing(0);
+    lenis.stop();
+  }
+
+  /* ---------- hero canvas: 3D point field ---------- */
+  var heroState=drawHero(true);
+
+  /* ---------- loader -> intro ---------- */
+  var cnt={v:0}, cEl=$('#loaderCount');
+  gsap.set('.line>span',{yPercent:110});
+  var intro=gsap.timeline({delay:.1});
+  intro.to(cnt,{v:100,duration:1.5,ease:'power2.inOut',onUpdate:function(){cEl.textContent=Math.round(cnt.v)}})
+       .to('.loader',{yPercent:-100,duration:1,ease:'expo.inOut'},'+=.1')
+       .add(function(){if(lenis)lenis.start();$('.loader').style.display='none'})
+       .to('.hero__title .line>span',{yPercent:0,duration:1.3,ease:'expo.out',stagger:.12},'-=.55')
+       .to('.hero [data-fade]',{opacity:1,y:0,duration:1,ease:'expo.out',stagger:.1},'-=.9');
+
+  /* hero scroll: title drifts, canvas spins faster */
+  gsap.to('.hero__title',{yPercent:-18,ease:'none',scrollTrigger:{trigger:'.hero',start:'top top',end:'bottom top',scrub:true}});
+  ScrollTrigger.create({trigger:'.hero',start:'top top',end:'bottom top',scrub:true,onUpdate:function(s){heroState.p=s.progress}});
+
+  /* ---------- generic fades ---------- */
+  $$('[data-fade]').forEach(function(el){
+    if(el.closest('.hero'))return;
+    gsap.to(el,{opacity:1,y:0,duration:1,ease:'expo.out',scrollTrigger:{trigger:el,start:'top 88%'}});
+  });
+
+  /* ---------- word scrub ---------- */
+  var st=$('#statementText'), words=st.textContent.trim().split(/\s+/);
+  st.setAttribute('aria-label',st.textContent.trim());
+  st.innerHTML=words.map(function(w){return '<span class="w" aria-hidden="true">'+w+'</span>'}).join(' ');
+  gsap.to('.statement .w',{opacity:1,stagger:.1,ease:'none',scrollTrigger:{trigger:'.statement',start:'top 70%',end:'bottom 60%',scrub:true}});
+
+  /* ---------- expanding panel ---------- */
+  var gut=parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--gutter'))||0;
+  gsap.to('#expandPanel',{clipPath:'inset(0% 0% round 0rem)',ease:'none',scrollTrigger:{trigger:'.expand',start:'top 85%',end:'top 5%',scrub:true}});
+  gsap.fromTo('.expand__panel h2',{yPercent:30,opacity:0},{yPercent:0,opacity:1,ease:'none',scrollTrigger:{trigger:'.expand',start:'top 60%',end:'top 10%',scrub:true}});
+  $$('[data-count]').forEach(function(el){
+    var end=+el.dataset.count,o={v:0};
+    el.textContent='0';
+    ScrollTrigger.create({trigger:el,start:'top 85%',once:true,onEnter:function(){
+      gsap.to(o,{v:end,duration:1.8,ease:'expo.out',onUpdate:function(){el.textContent=Math.round(o.v)}});
+    }});
+  });
+
+  /* ---------- products: pinned horizontal (desktop) / stacked (mobile) ---------- */
+  var mm=gsap.matchMedia();
+  mm.add('(min-width: 900px)',function(){
+    var track=$('#htrack');
+    var dist=function(){return Math.max(0,track.scrollWidth-innerWidth)};
+    gsap.to(track,{x:function(){return -dist()},ease:'none',scrollTrigger:{
+      trigger:'#hpin',pin:true,scrub:.8,start:'top top',end:function(){return '+='+dist()},invalidateOnRefresh:true,
+      onUpdate:function(s){gsap.set('#hbar',{scaleX:s.progress})}
+    }});
+  });
+  mm.add('(max-width: 899px)',function(){
+    var pin=$('#hpin'),track=$('#htrack');
+    pin.style.height='auto';pin.style.overflow='visible';
+    track.style.flexDirection='column';
+    $$('.card').forEach(function(c){
+      c.style.flex='none';c.style.width='100%';c.style.height='auto';c.style.minHeight='20rem';
+      gsap.from(c,{y:60,opacity:0,duration:1,ease:'expo.out',scrollTrigger:{trigger:c,start:'top 88%'}});
+    });
+    $('.hprogress').style.display='none';
+    return function(){pin.removeAttribute('style');track.removeAttribute('style');$$('.card').forEach(function(c){c.removeAttribute('style')});$('.hprogress').removeAttribute('style')};
+  });
+
+  /* ---------- about: items light up as they cross center ---------- */
+  $$('.about__items li').forEach(function(li){
+    gsap.fromTo(li,{opacity:.25},{opacity:1,ease:'none',scrollTrigger:{trigger:li,start:'top 80%',end:'top 45%',scrub:true}});
+  });
+
+  /* ---------- map: wipe reveal, dots pop ---------- */
+  gsap.to('#mapStage',{clipPath:'inset(0 0% 0 0)',ease:'none',scrollTrigger:{trigger:'#map',start:'top 80%',end:'top 20%',scrub:true,onUpdate:function(st){$('#mapStage').classList.toggle('is-done',st.progress>.999)}}});
+  gsap.to('.dot',{opacity:1,scale:1,duration:.7,ease:'back.out(2)',stagger:{amount:1.4,from:'start'},scrollTrigger:{trigger:'#map',start:'top 45%'}});
+
+  /* ---------- logo rows slide in ---------- */
+  $$('.lrow-wrap').forEach(function(w){gsap.from(w,{opacity:0,y:70,duration:1.2,ease:'expo.out',scrollTrigger:{trigger:w,start:'top 92%'}})});
+
+  /* ---------- marquees driven by scroll velocity ---------- */
+  var rows=$$('[data-marquee]').map(function(r){
+    // repeat the base set so one half always covers the viewport, then double it for a seamless loop
+    var kids=Array.prototype.slice.call(r.children),w0=r.scrollWidth||1;
+    var n=Math.max(1,Math.ceil(innerWidth*1.2/w0));
+    for(var i=0;i<2*n-1;i++){kids.forEach(function(k){var c=k.cloneNode(true);c.setAttribute('aria-hidden','true');r.appendChild(c)})}
+    var o={el:r,dir:+r.dataset.marquee,speed:+(r.dataset.speed||.6),skew:+(r.dataset.skew||1),x:0,w:0,hs:1,hover:false};
+    r.addEventListener('mouseenter',function(){o.hover=true});r.addEventListener('mouseleave',function(){o.hover=false});
+    return o;
+  });
+  function measure(){rows.forEach(function(r){r.w=r.el.scrollWidth/2})}
+  measure(); addEventListener('resize',measure); document.fonts&&document.fonts.ready.then(measure);
+  var vel=0;
+  if(lenis) lenis.on('scroll',function(e){vel=e.velocity});
+  gsap.ticker.add(function(){
+    vel*=.9;
+    rows.forEach(function(r){
+      r.hs+=((r.hover?0:1)-r.hs)*.08;
+      r.x+=r.dir*(r.speed+Math.abs(vel)*.35)*r.hs;
+      if(r.w){ if(r.x<=-r.w)r.x+=r.w; if(r.x>0)r.x-=r.w; }
+      r.el.style.transform='translate3d('+r.x+'px,0,0) skewX('+(-vel*.25*r.skew)+'deg)';
+    });
+  });
+
+  /* ---------- cta title ---------- */
+  gsap.to('.cta h2 .line>span',{yPercent:0,duration:1.3,ease:'expo.out',stagger:.12,scrollTrigger:{trigger:'.cta',start:'top 65%'}});
+
+  /* ---------- footer curtain: word rises ---------- */
+  gsap.fromTo('.footer__word',{yPercent:30},{yPercent:0,ease:'none',scrollTrigger:{trigger:'main',start:'bottom bottom+=40%',end:'bottom bottom',scrub:true}});
+
+  /* ---------- magnetic CTA + cursor ---------- */
+  var mag=$('#magnet');
+  if(matchMedia('(hover:hover)').matches){
+    var qx=gsap.quickTo(mag,'x',{duration:.5,ease:'power3'}),qy=gsap.quickTo(mag,'y',{duration:.5,ease:'power3'});
+    mag.addEventListener('mousemove',function(e){var b=mag.getBoundingClientRect();qx((e.clientX-b.left-b.width/2)*.25);qy((e.clientY-b.top-b.height/2)*.35)});
+    mag.addEventListener('mouseleave',function(){qx(0);qy(0)});
+
+    var cur=$('#cursor'),cx=gsap.quickTo(cur,'x',{duration:.35,ease:'power3'}),cy=gsap.quickTo(cur,'y',{duration:.35,ease:'power3'});
+    addEventListener('mousemove',function(e){cur.classList.add('is-on');cx(e.clientX);cy(e.clientY)});
+    document.addEventListener('mouseleave',function(){cur.classList.remove('is-on')});
+    $$('[data-cursor],a,button').forEach(function(el){
+      if(el.classList.contains('nrow'))return;
+      el.addEventListener('mouseenter',function(){cur.classList.add('is-big')});
+      el.addEventListener('mouseleave',function(){cur.classList.remove('is-big')});
+    });
+  }
+
+  addEventListener('load',function(){ScrollTrigger.refresh()});
+
+  /* ===== hero canvas ===== */
+  function drawHero(animated){
+    var cv=$('#heroCanvas'),ctx=cv.getContext('2d'),dpr=Math.min(devicePixelRatio||1,2);
+    var cs=getComputedStyle(document.documentElement);
+    var cInk=cs.getPropertyValue('--color-paper').trim(),cAcc=cs.getPropertyValue('--color-accent-soft').trim();
+    var N=innerWidth<700?420:900,pts=[],i;
+    for(i=0;i<N;i++){ // points on a torus knot-ish shell
+      var u=Math.random()*Math.PI*2,v=Math.random()*Math.PI*2,R=1,r=.38+.1*Math.sin(u*3);
+      pts.push({x:(R+r*Math.cos(v))*Math.cos(u),y:(R+r*Math.cos(v))*Math.sin(u),z:r*Math.sin(v),a:Math.random()<.14});
+    }
+    var W=0,H=0,mx=0,my=0,tmx=0,tmy=0,state={p:0},t=0,visible=true;
+    function size(){W=cv.clientWidth;H=cv.clientHeight;cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0)}
+    size();addEventListener('resize',size);
+    addEventListener('mousemove',function(e){tmx=e.clientX/innerWidth-.5;tmy=e.clientY/innerHeight-.5});
+    if('IntersectionObserver' in window)new IntersectionObserver(function(e){visible=e[0].isIntersecting}).observe(cv);
+    function frame(){
+      if(visible){
+        t+=.0035+state.p*.02;mx+=(tmx-mx)*.05;my+=(tmy-my)*.05;
+        ctx.clearRect(0,0,W,H);
+        var ry=t+mx*1.2,rx=.9+my*.8+state.p*1.2,cyy=Math.cos(ry),syy=Math.sin(ry),cxx=Math.cos(rx),sxx=Math.sin(rx);
+        var S=Math.min(W,H)*(.5+state.p*.5),ox=W*(innerWidth<900?.5:.68),oy=H*.42;
+        for(var k=0;k<pts.length;k++){
+          var p=pts[k],x=p.x*cyy-p.z*syy,z=p.x*syy+p.z*cyy,y=p.y*cxx-z*sxx;z=p.y*sxx+z*cxx;
+          var f=2.6/(2.6+z),sx=ox+x*S*f,sy=oy+y*S*f,rad=(p.a?2.6:1.5)*f;
+          ctx.globalAlpha=Math.max(.12,Math.min(1,.35+z*-.35+.4))*(1-state.p*.6);
+          ctx.fillStyle=p.a?cAcc:cInk;
+          ctx.beginPath();ctx.arc(sx,sy,rad,0,6.283);ctx.fill();
+        }
+        ctx.globalAlpha=1;
+      }
+      if(animated)requestAnimationFrame(frame);
+    }
+    frame();
+    return state;
+  }
+})();
+</script>
+</body>
+</html>
